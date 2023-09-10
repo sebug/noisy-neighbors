@@ -9,3 +9,4 @@ Then bicep that thing:
     cd noisy-neighbors
     az deployment group create -f ./main.bicep -g NoisyNeighborsRG
 
+Finally, go to the resource group and one of the VMs and put Bastion into place to connect.
