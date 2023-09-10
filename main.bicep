@@ -105,6 +105,11 @@ resource virtualNetwork 'Microsoft.Network/virtualNetworks@2023-05-01' = {
   name: virtualNetworkName
   location: location
   properties: {
+    addressSpace: {
+      addressPrefixes: [
+        
+      ]
+    }
     subnets: [
       {
         name: backEndSubnetName
