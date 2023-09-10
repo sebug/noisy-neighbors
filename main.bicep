@@ -89,7 +89,7 @@ module storageModule 'storage.bicep' = {
   name: 'storageTemplate'
   params: {
     location: location
-    storageAccountName: storageAccountName,
+    storageAccountName: storageAccountName
     appStorageAccountName: appStorageAccountName
   }
 }
