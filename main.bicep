@@ -65,7 +65,7 @@ var thirdNicName = 'thirdVmNic'
 // so that we can properly formalize a frontend access if we need to
 var backEndSubnetName = 'NNBackEnd'
 var backEndSubnetPrefix = '22.22.2.0/24'
-var backEndAddressPrefix = '22.22.2.0/16'
+var backEndAddressPrefix = '22.22.0.0/16'
 
 var virtualNetworkName = 'MyVNET'
 var backendNetworkSecurityGroupName = 'backend-NSG'
