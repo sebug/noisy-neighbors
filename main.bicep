@@ -57,6 +57,7 @@ param thirdVmName string = 'third-vm'
 param securityType string = 'TrustedLaunch'
 
 var storageAccountName = 'bootdiags${uniqueString(resourceGroup().id)}'
+var appStorageAccountName = 'appstorage${uniqueString(resourceGroup().id)}'
 var firstNicName = 'firstVMNic'
 var secondNicName = 'secondVMNic'
 var thirdNicName = 'thirdVmNic'
@@ -88,7 +89,8 @@ module storageModule 'storage.bicep' = {
   name: 'storageTemplate'
   params: {
     location: location
-    storageAccountName: storageAccountName
+    storageAccountName: storageAccountName,
+    appStorageAccountName: appStorageAccountName
   }
 }
 
