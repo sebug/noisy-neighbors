@@ -91,6 +91,7 @@ module storageModule 'storage.bicep' = {
   }
 }
 
+// everything goes
 resource backendNetworkSecurityGroup 'Microsoft.Network/networkSecurityGroups@2023-05-01' = {
   name: backendNetworkSecurityGroupName
   location: location
