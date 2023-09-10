@@ -14,3 +14,5 @@ After it's in place, go to the app storage account and upload your exe that you 
 Finally, go to the resource group and one of the VMs and put Bastion into place to connect. Know that you can use the little >> chevron to paste the URL of the exe you just uploaded so that you can
 
     Invoke-WebRequest -Uri TheURIYouPasted -OutFile installit.msi
+
+Once the three VMs have installed the exe you wanted (you can open f)ile explorer to install by tying explorer .), start the apps on the three machines and see what happens.
