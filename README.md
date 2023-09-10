@@ -9,4 +9,6 @@ Then bicep that thing:
     cd noisy-neighbors
     az deployment group create -f ./main.bicep -g NoisyNeighborsRG
 
+After it's in place, go to the app storage account and upload your exe that you want to test.
+
 Finally, go to the resource group and one of the VMs and put Bastion into place to connect.
