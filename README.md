@@ -20,4 +20,12 @@ Go to disk management and initialize the data disk - we want to store the VHDXs 
 
 Activate Hyper-V and download the developer VHDX: https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/
 
-Create three machines out of that.
+Create three machines out of that as indicated in the superuser answer here: https://superuser.com/a/1247990/458495
+
+Start them up (that may take a moment).
+
+Enable Guest services on the VMs, so that you can copy installit.msi to them:
+
+  Copy-VMFile 'inner1' -SourcePath .\installit.msi -DestinationPath 'C:\out.msi' -FileSource Host
+
+repeate with inner2 and inner3
