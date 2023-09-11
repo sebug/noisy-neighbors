@@ -16,3 +16,6 @@ Finally, go to the VM and put Bastion into place to connect. Know that you can u
 
     Invoke-WebRequest -Uri TheURIYouPasted -OutFile installit.msi
 
+Activate Hyper-V and download the developer VHDX: https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/
+
+Create three machines out of that.
