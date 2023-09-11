@@ -16,6 +16,8 @@ Finally, go to the VM and put Bastion into place to connect. Know that you can u
 
     Invoke-WebRequest -Uri TheURIYouPasted -OutFile installit.msi
 
+Go to disk management and initialize the data disk - we want to store the VHDXs on it.
+
 Activate Hyper-V and download the developer VHDX: https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/
 
 Create three machines out of that.

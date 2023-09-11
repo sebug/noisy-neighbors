@@ -35,7 +35,7 @@ param adminPassword string
 param OSVersion string = '2022-datacenter-azure-edition'
 
 @description('Size of the virtual machine.')
-param vmSize string = 'Standard_D2s_v5'
+param vmSize string = 'Standard_E4bs_v5'
 
 @description('Location for all resources.')
 param location string = resourceGroup().location
