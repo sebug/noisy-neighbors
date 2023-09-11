@@ -92,10 +92,6 @@ resource backendNetworkSecurityGroup 'Microsoft.Network/networkSecurityGroups@20
   location: location
   properties: {
     securityRules: [
-      {
-        id: 'udp-allow-all'
-        name: 'UDP allow all'
-      }
     ]
   }
 }
