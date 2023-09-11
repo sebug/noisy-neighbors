@@ -43,12 +43,6 @@ param location string = resourceGroup().location
 @description('Name of the first virtual machine.')
 param firstVmName string = 'first-vm'
 
-@description('Name of the second virtual machine')
-param secondVmName string = 'second-vm'
-
-@description('Name of the third vm')
-param thirdVmName string = 'third-vm'
-
 @description('Security Type of the Virtual Machines.')
 @allowed([
   'Standard'
@@ -59,8 +53,6 @@ param securityType string = 'TrustedLaunch'
 var storageAccountName = 'bootdiags${uniqueString(resourceGroup().id)}'
 var appStorageAccountName = 'appstorage${uniqueString(resourceGroup().id)}'
 var firstNicName = 'firstVMNic'
-var secondNicName = 'secondVMNic'
-var thirdNicName = 'thirdVmNic'
 
 // we don't really need a frontend, we can connect over Bastion. But nevermind, keeping the same naming standard
 // so that we can properly formalize a frontend access if we need to
@@ -100,6 +92,10 @@ resource backendNetworkSecurityGroup 'Microsoft.Network/networkSecurityGroups@20
   location: location
   properties: {
     securityRules: [
+      {
+        id: 'udp-allow-all'
+        name: 'UDP allow all'
+      }
     ]
   }
 }
@@ -137,50 +133,6 @@ resource firstNic 'Microsoft.Network/networkInterfaces@2023-05-01' = {
         properties: {
           privateIPAllocationMethod: 'Static'
           privateIPAddress: '22.22.2.10'
-          subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, backEndSubnetName)
-          }
-        }
-      }
-    ]
-  }
-  dependsOn: [
-    virtualNetwork
-  ]
-}
-
-resource secondNic 'Microsoft.Network/networkInterfaces@2023-05-01' = {
-  name: secondNicName
-  location: location
-  properties: {
-    ipConfigurations: [
-      {
-        name: 'ipconfig2'
-        properties: {
-          privateIPAllocationMethod: 'Static'
-          privateIPAddress: '22.22.2.11'
-          subnet: {
-            id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, backEndSubnetName)
-          }
-        }
-      }
-    ]
-  }
-  dependsOn: [
-    virtualNetwork
-  ]
-}
-
-resource thirdNic 'Microsoft.Network/networkInterfaces@2023-05-01' = {
-  name: thirdNicName
-  location: location
-  properties: {
-    ipConfigurations: [
-      {
-        name: 'ipconfig3'
-        properties: {
-          privateIPAllocationMethod: 'Static'
-          privateIPAddress: '22.22.2.12'
           subnet: {
             id: resourceId('Microsoft.Network/virtualNetworks/subnets', virtualNetworkName, backEndSubnetName)
           }
@@ -262,144 +214,3 @@ resource firstVmExtension 'Microsoft.Compute/virtualMachines/extensions@2023-07-
     }
   }
 }
-
-resource secondVm 'Microsoft.Compute/virtualMachines@2023-07-01' = {
-  name: secondVmName
-  location: location
-  properties: {
-    hardwareProfile: {
-      vmSize: vmSize
-    }
-    osProfile: {
-      computerName: secondVmName
-      adminUsername: adminUsername
-      adminPassword: adminPassword
-    }
-    storageProfile: {
-      imageReference: {
-        publisher: 'MicrosoftWindowsServer'
-        offer: 'WindowsServer'
-        sku: OSVersion
-        version: 'latest'
-      }
-      osDisk: {
-        createOption: 'FromImage'
-        managedDisk: {
-          storageAccountType: 'StandardSSD_LRS'
-        }
-      }
-      dataDisks: [
-        {
-          diskSizeGB: 1023
-          lun: 0
-          createOption: 'Empty'
-        }
-      ]
-    }
-    networkProfile: {
-      networkInterfaces: [
-        {
-          id: secondNic.id
-        }
-      ]
-    }
-    diagnosticsProfile: {
-      bootDiagnostics: {
-        enabled: true
-        storageUri: storageModule.outputs.storageURI
-      }
-    }
-    securityProfile: ((securityType == 'TrustedLaunch') ? securityProfileJson : null)
-  }
-}
-
-resource secondVmExtension 'Microsoft.Compute/virtualMachines/extensions@2023-07-01' = if ((securityType == 'TrustedLaunch') && ((securityProfileJson.uefiSettings.secureBootEnabled == true) && (securityProfileJson.uefiSettings.vTpmEnabled == true))) {
-  parent: secondVm
-  name: extensionName
-  location: location
-  properties: {
-    publisher: extensionPublisher
-    type: extensionName
-    typeHandlerVersion: extensionVersion
-    autoUpgradeMinorVersion: true
-    settings: {
-      AttestationConfig: {
-        MaaSettings: {
-          maaEndpoint: maaEndpoint
-          maaTenantName: maaTenantName
-        }
-      }
-    }
-  }
-}
-
-resource thirdVm 'Microsoft.Compute/virtualMachines@2023-07-01' = {
-  name: thirdVmName
-  location: location
-  properties: {
-    hardwareProfile: {
-      vmSize: vmSize
-    }
-    osProfile: {
-      computerName: thirdVmName
-      adminUsername: adminUsername
-      adminPassword: adminPassword
-    }
-    storageProfile: {
-      imageReference: {
-        publisher: 'MicrosoftWindowsServer'
-        offer: 'WindowsServer'
-        sku: OSVersion
-        version: 'latest'
-      }
-      osDisk: {
-        createOption: 'FromImage'
-        managedDisk: {
-          storageAccountType: 'StandardSSD_LRS'
-        }
-      }
-      dataDisks: [
-        {
-          diskSizeGB: 1023
-          lun: 0
-          createOption: 'Empty'
-        }
-      ]
-    }
-    networkProfile: {
-      networkInterfaces: [
-        {
-          id: thirdNic.id
-        }
-      ]
-    }
-    diagnosticsProfile: {
-      bootDiagnostics: {
-        enabled: true
-        storageUri: storageModule.outputs.storageURI
-      }
-    }
-    securityProfile: ((securityType == 'TrustedLaunch') ? securityProfileJson : null)
-  }
-}
-
-resource thirdVmExtension 'Microsoft.Compute/virtualMachines/extensions@2023-07-01' = if ((securityType == 'TrustedLaunch') && ((securityProfileJson.uefiSettings.secureBootEnabled == true) && (securityProfileJson.uefiSettings.vTpmEnabled == true))) {
-  parent: thirdVm
-  name: extensionName
-  location: location
-  properties: {
-    publisher: extensionPublisher
-    type: extensionName
-    typeHandlerVersion: extensionVersion
-    autoUpgradeMinorVersion: true
-    settings: {
-      AttestationConfig: {
-        MaaSettings: {
-          maaEndpoint: maaEndpoint
-          maaTenantName: maaTenantName
-        }
-      }
-    }
-  }
-}
-
