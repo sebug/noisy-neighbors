@@ -1,6 +1,6 @@
 # Download the developer image on it
 cd F:\
-Invoke-WebRequest -Uri 'https://aka.ms/windev_VM_hyperv' -OutFile out.zip
+Invoke-WebRequest -Uri 'https://download.microsoft.com/download/4/2/9/429245de-d629-420f-92b4-711d8c2977fd/WinDev2308Eval.HyperV.zip' -OutFile out.zip
 'inner1', 'inner2', 'inner3' | ForEach-Object {
     $vmName = $_
     Expand-Archive .\out.zip $vmName
