@@ -85,6 +85,17 @@ param HostAdminUsername string
 @secure()
 param HostAdminPassword string
 
+var appStorageAccountName = 'appstorage${uniqueString(resourceGroup().id)}'
+
+module storageModule 'storage.bicep' = {
+  name: 'storageTemplate'
+  params: {
+    location: location
+    storageAccountName: storageAccountName
+    appStorageAccountName: appStorageAccountName
+  }
+}
+
 var NATSubnetNSGName = '${NATSubnetName}NSG'
 var hyperVSubnetNSGName = '${hyperVSubnetName}NSG'
 var ghostedSubnetNSGName = '${ghostedSubnetName}NSG'
