@@ -16,15 +16,9 @@ Finally, go to the VM and put Bastion into place to connect. Know that you can u
 
     Invoke-WebRequest -Uri TheURIYouPasted -OutFile installit.msi
 
-Go to disk management and initialize the data disk - we want to store the VHDXs on it.
+The post-install script should already download the developer VHDX: https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/ , create 3 VMs and start them.
 
-Activate Hyper-V and download the developer VHDX: https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/
-
-Create three machines out of that as indicated in the superuser answer here: https://superuser.com/a/1247990/458495 , but use the NestedSwitch instead.
-
-Start them up (that may take a moment).
-
-Enable Guest services on the VMs, so that you can copy installit.msi to them:
+Copy installit.msi to them:
 
   Copy-VMFile 'inner1' -SourcePath .\installit.msi -DestinationPath 'C:\out.msi' -FileSource Host
 
