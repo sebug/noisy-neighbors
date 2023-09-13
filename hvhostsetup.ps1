@@ -34,17 +34,4 @@ cmd.exe /c "netsh routing ip add persistentroute dest=$($VirtualNetwork.NetworkA
 
 Get-Disk | Where-Object -Property PartitionStyle -EQ "RAW" | Initialize-Disk -PartitionStyle GPT -PassThru | New-Volume -FileSystem NTFS -AllocationUnitSize 65536 -DriveLetter F -FriendlyName "Hyper-V"
 
-# Download the developer image on it
-cd F:\
-Invoke-WebRequest -Uri 'https://aka.ms/windev_VM_hyperv' -OutFile out.zip
-'inner1', 'inner2', 'inner3' | ForEach-Object {
-    $vmName = $_
-    Expand-Archive .\out.zip $vmName
-}
-'inner1', 'inner2', 'inner3' | ForEach-Object {
-    $vmName = $_
-    New-VM -Name $vmName -MemoryStartupBytes 8096MB -Path ('F:\' + $vmName + '.local') -Generation 2 -SwitchName 'NestedSwitch' -VHDPath ('F:\' + $vmName + '\WinDev2308Eval.vhdx') -BootDevice VHD
-    Enable-VMIntegrationService -VMName $vmName -Name 'Guest Service Interface'
-    Start-VM -VMName $vmName
-}
-
+Invoke-WebRequest 'https://github.com/sebug/noisy-neighbors/raw/main/provision-vms.ps1' -OutFile F:\provision-vms.ps1
