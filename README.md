@@ -20,7 +20,7 @@ Go to disk management and initialize the data disk - we want to store the VHDXs 
 
 Activate Hyper-V and download the developer VHDX: https://developer.microsoft.com/en-us/windows/downloads/virtual-machines/
 
-Create three machines out of that as indicated in the superuser answer here: https://superuser.com/a/1247990/458495
+Create three machines out of that as indicated in the superuser answer here: https://superuser.com/a/1247990/458495 , but use the NestedSwitch instead.
 
 Start them up (that may take a moment).
 
