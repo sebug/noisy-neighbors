@@ -85,6 +85,7 @@ param HostAdminUsername string
 @secure()
 param HostAdminPassword string
 
+var storageAccountName = 'bootdiags${uniqueString(resourceGroup().id)}'
 var appStorageAccountName = 'appstorage${uniqueString(resourceGroup().id)}'
 
 module storageModule 'storage.bicep' = {
