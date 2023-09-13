@@ -37,6 +37,11 @@ Get-Disk | Where-Object -Property PartitionStyle -EQ "RAW" | Initialize-Disk -Pa
 # Download the developer image on it
 cd F:\
 Invoke-WebRequest -Uri 'https://aka.ms/windev_VM_hyperv' -OutFile out.zip
-Expand-Archive .\out.zip inner1
-Expand-Archive .\out.zip inner2
-Expand-Archive .\out.zip inner3
+'inner1', 'inner2', 'inner3' | ForEach-Object {
+    $vmName = $_
+    Expand-Archive .\out.zip $vmName
+    New-VM -Name $vmName -MemoryStartupBytes 8096MB -Path ('F:\' + $vmName + '.local') -Generation 2 -SwitchName 'NestedSwitch' -VHDPath ('F:\' + $vmName + '\WinDev2308Eval.vhdx') -BootDevice VHD
+    Enable-VMIntegrationService -VMName $vmName -Name 'Guest Service Interface'
+    Start-VM -VMName $vmName
+}
+
