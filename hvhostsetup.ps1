@@ -33,3 +33,10 @@ cmd.exe /c "netsh routing ip add persistentroute dest=$($NatSubnet.NetworkAddres
 cmd.exe /c "netsh routing ip add persistentroute dest=$($VirtualNetwork.NetworkAddress) mask=$($VirtualNetwork.SubnetMask) name=""$($NIC2IP.InterfaceAlias)"" nhop=$($HyperVSubnet.HostAddresses[0])"
 
 Get-Disk | Where-Object -Property PartitionStyle -EQ "RAW" | Initialize-Disk -PartitionStyle GPT -PassThru | New-Volume -FileSystem NTFS -AllocationUnitSize 65536 -DriveLetter F -FriendlyName "Hyper-V"
+
+# Download the developer image on it
+cd F:\
+Invoke-WebRequest -Uri 'https://aka.ms/windev_VM_hyperv' -OutFile out.zip
+Expand-Archive .\out.zip inner1
+Expand-Archive .\out.zip inner2
+Expand-Archive .\out.zip inner3
