@@ -199,16 +199,17 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-05-01' = {
           }
         }
       }
-      {
-        name: 'AzureBastionSubnet'
-        id: 'bastionsubnet'
-        properties: {
-          addressPrefix: bastionSubnetPrefix
-          privateEndpointNetworkPolicies: 'Disabled'
-          privateLinkServiceNetworkPolicies: 'Disabled'
-        }
-      }
     ]
+  }
+}
+
+resource bastionSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' = {
+  name: 'AzureBastionSubnet'
+  parent: vnet
+  properties: {
+    addressPrefix: bastionSubnetPrefix
+    privateEndpointNetworkPolicies: 'Disabled'
+    privateLinkServiceNetworkPolicies: 'Disabled'
   }
 }
 
@@ -381,5 +382,6 @@ module bastion './bastion.bicep' = {
   params: {
     location: location
     bastionHostName: hostVm.name
+    bastionSubnetID: bastionSubnet.id
   }
 }
