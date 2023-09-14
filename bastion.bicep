@@ -2,29 +2,11 @@
 @description('The Azure region where the Bastion should be deployed')
 param location string
 
-@description('Virtual network name')
-param vnetName string
-
-@description('The address prefix to use for the Bastion subnet')
-param addressPrefix string = '192.168.250.0/27'
-
 @description('The name of the Bastion public IP address')
 param publicIpName string = 'pip-bastion'
 
 @description('The name of the Bastion host')
 param bastionHostName string = 'bastion-jumpbox'
-
-// The Bastion Subnet is required to be named 'AzureBastionSubnet'
-var subnetName = 'AzureBastionSubnet'
-
-resource bastionSubnet 'Microsoft.Network/virtualNetworks/subnets@2023-05-01' = {
-  name: '${vnetName}/${subnetName}'
-  properties: {
-    addressPrefix: addressPrefix
-    privateEndpointNetworkPolicies: 'Disabled'
-    privateLinkServiceNetworkPolicies: 'Disabled'
-  }
-}
 
 resource publicIpAddressForBastion 'Microsoft.Network/publicIPAddresses@2023-05-01' = {
   name: publicIpName
@@ -46,7 +28,7 @@ resource bastionHost 'Microsoft.Network/bastionHosts@2023-05-01' = {
         name: 'IpConf'
         properties: {
           subnet: {
-            id: bastionSubnet.id
+            id: 'bastionsubnet'
           }
           publicIPAddress: {
             id: publicIpAddressForBastion.id

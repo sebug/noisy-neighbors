@@ -14,6 +14,9 @@ param virtualNetworkName string = 'VirtualNetwork'
 @description('Virtual Network Address Space')
 param virtualNetworkAddressPrefix string = '10.0.0.0/22'
 
+@description('Bastion Virtual Network Address Space')
+param bastionVirtualNetworkAddressPrefix string = '11.0.0.0/22'
+
 @description('NAT Subnet Name')
 param NATSubnetName string = 'NAT'
 
@@ -31,6 +34,9 @@ param ghostedSubnetName string = 'Ghosted'
 
 @description('Ghosted Subnet Address Space')
 param ghostedSubnetPrefix string = '10.0.2.0/24'
+
+@description('Bastion Subnet Address Space')
+param bastionSubnetPrefix string = '11.0.1.0/24'
 
 @description('Azure VMs Subnet Name')
 param azureVMsSubnetName string = 'Azure-VMs'
@@ -150,6 +156,7 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-05-01' = {
     addressSpace: {
       addressPrefixes: [
         virtualNetworkAddressPrefix
+        bastionVirtualNetworkAddressPrefix
       ]
     }
     subnets: [
@@ -190,6 +197,15 @@ resource vnet 'Microsoft.Network/virtualNetworks@2023-05-01' = {
           routeTable: {
             id: createAzureVmUdr.outputs.udrId
           }
+        }
+      }
+      {
+        name: 'AzureBastionSubnet'
+        id: 'bastionsubnet'
+        properties: {
+          addressPrefix: bastionSubnetPrefix
+          privateEndpointNetworkPolicies: 'Disabled'
+          privateLinkServiceNetworkPolicies: 'Disabled'
         }
       }
     ]
@@ -363,7 +379,6 @@ resource hostVmSetupExtension 'Microsoft.Compute/virtualMachines/extensions@2023
 module bastion './bastion.bicep' = {
   name: 'bastion'
   params: {
-    vnetName: 'bastionVNet'
     location: location
     bastionHostName: hostVm.name
   }
