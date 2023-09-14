@@ -359,3 +359,12 @@ resource hostVmSetupExtension 'Microsoft.Compute/virtualMachines/extensions@2023
     vmExtension
   ]
 }
+
+module bastion './bastion.bicep' = {
+  name: 'bastion'
+  params: {
+    vnetName: 'bastionVNet'
+    location: location
+    bastionHostName: hostVm.name
+  }
+}
