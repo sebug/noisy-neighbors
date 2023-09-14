@@ -12,7 +12,7 @@ Then bicep that thing:
 
 After it's in place, go to the app storage account and upload your exe that you want to test. The blob container may be anonymous (the storage account has a random name and you'll be downloading an exe without any private information, right?), the point is just we'll have to install it on the machine. Copy the URL of the exe in the public blob container.
 
-Finally, go to the VM and put Bastion into place to connect. Know that you can use the little >> chevron to paste the URL of the exe you just uploaded so that you can
+Finally, go to the VM and connect with Bastion. Know that you can use the little >> chevron to paste the URL of the exe you just uploaded so that you can
 
     Invoke-WebRequest -Uri TheURIYouPasted -OutFile installit.msi
 
@@ -22,4 +22,4 @@ Copy installit.msi to them:
 
   Copy-VMFile 'inner1' -SourcePath .\installit.msi -DestinationPath 'C:\out.msi' -FileSource Host
 
-repeate with inner2 and inner3
+repeat with inner2 and inner3
